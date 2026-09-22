@@ -1,0 +1,52 @@
+{% extends "public_base.html" %}
+
+{% block title %}Login - CyberRisk{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center pt-5 mt-5" style="min-height: calc(100vh - 150px);">
+    <div class="w-100" style="max-width: 450px;">
+        <div class="card border-0 glass-card p-4 animate-fade-in-up">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold"><i class="fa-solid fa-right-to-bracket text-primary me-2"></i>Welcome Back</h3>
+                <p class="text-muted">Sign in to your Organization as an Admin or Employee.</p>
+            </div>
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control form-control-lg bg-dark text-light" id="username" name="username" required autofocus>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="position-relative">
+                        <input type="password" class="form-control form-control-lg bg-dark text-light pe-5" id="password" name="password" required>
+                        <span class="position-absolute top-50 end-0 translate-middle-y pe-3" style="cursor: pointer; z-index: 10;" onclick="togglePassword('password', this)">
+                            <i class="fa-regular fa-eye text-muted"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill btn-glow">Sign In</button>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <p class="mb-0 text-muted">Don't have an account? <a href="{{ url_for('auth.register') }}" class="text-primary text-decoration-none">Register here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function togglePassword(inputId, btn) {
+    var input = document.getElementById(inputId);
+    var icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
+{% endblock %}

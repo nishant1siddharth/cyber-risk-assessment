@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment Report - CyberRisk{% endblock %}
+
+{% block extra_css %}
+<style>
+    @media print {
+        #sidebar-wrapper, .navbar, .btn, footer {
+            display: none !important;
+        }
+        #page-content-wrapper {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+        .card {
+            border: 1px solid #ccc !important;
+            box-shadow: none !important;
+            break-inside: avoid;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold"><i class="fa-solid fa-file-pdf me-2"></i> Executive Report</h2>
+            <p class="text-muted mb-0">Comprehensive summary of your cybersecurity risk posture.</p>
+        </div>
+        <button class="btn btn-secondary" onclick="window.print()"><i class="fa-solid fa-print me-1"></i> Print / Save PDF</button>
+    </div>
+</div>
+
+<div class="card shadow border-0 mb-4">
+    <div class="card-header bg-dark text-white p-4">
+        <h3 class="mb-0">Cybersecurity Risk Assessment Report</h3>
+        <p class="mb-0 text-light mt-2">Generated for: <strong>{{ business.name }}</strong> on {{ date }}</p>
+    </div>
+    <div class="card-body p-5">
+        
+        <!-- 1. Executive Summary -->
+        <h4 class="fw-bold border-bottom pb-2 mb-4 text-primary">1. Executive Summary</h4>
+        <p>This academic prototype report provides an overview of the current cybersecurity risk posture for {{ business.name }} ({{ business.business_type }}). A total of <strong>{{ assets|length }} assets</strong> were analyzed against various threats, resulting in <strong>{{ assessments|length }} risk assessments</strong>.</p>
+        
+        <div class="row mb-5 text-center g-4">
+            <div class="col-md-3">
+                <div class="p-4 rounded border" style="background-color: rgba(25, 135, 84, 0.1); border-color: rgba(74, 222, 128, 0.3) !important;">
+                    <h5 class="mb-2 text-uppercase fw-bold" style="color: #4ade80; letter-spacing: 1px;">Low</h5>
+                    <h2 class="display-5 fw-bold mb-0 text-white">{{ risk_counts['Low'] }}</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4 rounded border" style="background-color: rgba(255, 193, 7, 0.1); border-color: rgba(250, 204, 21, 0.3) !important;">
+                    <h5 class="mb-2 text-uppercase fw-bold" style="color: #facc15; letter-spacing: 1px;">Medium</h5>
+                    <h2 class="display-5 fw-bold mb-0 text-white">{{ risk_counts['Medium'] }}</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4 rounded border" style="background-color: rgba(253, 126, 20, 0.1); border-color: rgba(251, 146, 60, 0.3) !important;">
+                    <h5 class="mb-2 text-uppercase fw-bold" style="color: #fb923c; letter-spacing: 1px;">High</h5>
+                    <h2 class="display-5 fw-bold mb-0 text-white">{{ risk_counts['High'] }}</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4 rounded border" style="background-color: rgba(220, 53, 69, 0.15); border-color: rgba(248, 113, 113, 0.4) !important;">
+                    <h5 class="mb-2 text-uppercase fw-bold" style="color: #f87171; letter-spacing: 1px;">Critical</h5>
+                    <h2 class="display-5 fw-bold mb-0 text-white">{{ risk_counts['Critical'] }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Assessed Assets -->
+        <h4 class="fw-bold border-bottom pb-2 mb-4 text-primary">2. Asset Inventory</h4>
+        <div class="table-responsive mb-5">
+            <table class="table table-bordered table-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Asset Name</th>
+                        <th>Category</th>
+                        <th>Importance (1-5)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for asset in assets %}
+                    <tr>
+                        <td>{{ asset.name }}</td>
+                        <td>{{ asset.category }}</td>
+                        <td>{{ asset.importance }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="text-center">No assets found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 3. Risk Findings -->
+        <h4 class="fw-bold border-bottom pb-2 mb-4 text-primary">3. Risk Findings (Ranked by Severity)</h4>
+        <div class="table-responsive mb-5">
+            <table class="table table-bordered table-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Threat</th>
+                        <th>Target Asset</th>
+                        <th>Score</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in assessments %}
+                    <tr>
+                        <td class="fw-bold">{{ a.threat.name }}</td>
+                        <td>{{ a.asset.name }}</td>
+                        <td>{{ a.risk_score }} <small class="text-muted">({{ a.likelihood }}x{{ a.impact }})</small></td>
+                        <td>
+                            {% if a.risk_level == 'Critical' %}<span class="badge badge-critical">Critical</span>
+                            {% elif a.risk_level == 'High' %}<span class="badge badge-high">High</span>
+                            {% elif a.risk_level == 'Medium' %}<span class="badge badge-medium">Medium</span>
+                            {% else %}<span class="badge badge-low">Low</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-center">No risk assessments performed.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 4. Mitigation Action Plan -->
+        <h4 class="fw-bold border-bottom pb-2 mb-4 text-primary">4. Mitigation Action Plan (High & Critical Risks)</h4>
+        {% if action_plan %}
+            {% for item in action_plan %}
+            <div class="mb-4">
+                <h5 class="fw-bold"><i class="fa-solid fa-shield me-2 text-danger"></i> Defenses for {{ item.threat_name }}</h5>
+                <ul class="list-group list-group-flush border">
+                    {% for mitigation in item.mitigations %}
+                    <li class="list-group-item">
+                        <strong>{{ mitigation.title }}</strong> 
+                        <span class="badge bg-secondary ms-2">{{ mitigation.priority }}</span><br>
+                        <small class="text-muted">{{ mitigation.description }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted mb-5">No high or critical risks identified requiring immediate mitigation planning.</p>
+        {% endif %}
+
+        <!-- 5. Academic Disclaimer -->
+        <div class="alert alert-secondary mt-5" role="alert">
+            <h5 class="alert-heading"><i class="fa-solid fa-graduation-cap me-2"></i> Academic Prototype Disclaimer</h5>
+            <p class="mb-0 small">This report is generated by a simplified educational risk-assessment framework. It does not represent a certified cybersecurity audit, is not a guarantee of security, and should not replace a professional enterprise risk management platform or professional penetration testing.</p>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

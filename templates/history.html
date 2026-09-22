@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment History - CyberRisk{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold"><i class="fa-solid fa-clock-rotate-left me-2"></i> Assessment History</h2>
+            <p class="text-muted mb-0">Review past risk assessments and track changes over time.</p>
+        </div>
+        <a href="{{ url_for('assessment.new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> New Assessment</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Past Assessments</span>
+                <div class="input-group" style="width: 300px;">
+                    <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
+                    <input type="text" class="form-control" id="historySearch" placeholder="Filter by asset, threat, or risk level...">
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="historyTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Asset</th>
+                                <th>Threat</th>
+                                <th>Score (L&times;I)</th>
+                                <th>Risk Level</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for a in assessments %}
+                            <tr>
+                                <td>{{ a.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td class="fw-bold">{{ a.asset.name }}</td>
+                                <td>{{ a.threat.name }}</td>
+                                <td>{{ a.risk_score }} <span class="text-muted small">({{ a.likelihood }}&times;{{ a.impact }})</span></td>
+                                <td>
+                                    {% if a.risk_level == 'Low' %}
+                                        <span class="badge bg-success">Low</span>
+                                    {% elif a.risk_level == 'Medium' %}
+                                        <span class="badge bg-warning text-dark">Medium</span>
+                                    {% elif a.risk_level == 'High' %}
+                                        <span class="badge bg-danger">High</span>
+                                    {% elif a.risk_level == 'Critical' %}
+                                        <span class="badge bg-dark">Critical</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('assessment.results', assessment_id=a.id) }}" class="btn btn-sm btn-outline-primary" title="View Result">
+                                        <i class="fa-solid fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    <i class="fa-solid fa-clipboard text-muted mb-2" style="font-size: 2rem;"></i><br>
+                                    No assessments found. Perform a new risk assessment to see history here.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('historySearch').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#historyTable tbody tr');
+        
+        rows.forEach(row => {
+            if(row.children.length === 1) return; // skip empty state row
+            let text = row.textContent.toLowerCase();
+            if(text.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Business Profile - CyberRisk{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fa-solid fa-building me-2"></i> Business Profile</h2>
+        <p class="text-muted">Manage your business information for accurate risk assessments.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header">
+                <i class="fa-solid fa-pen-to-square me-1"></i> Edit Business Details
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('business.profile') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Business Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ business.name if business else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="business_type" class="form-label">Business Type *</label>
+                        <select class="form-select" id="business_type" name="business_type" required>
+                            <option value="">Select a type...</option>
+                            {% set types = ['Retail', 'Education', 'Healthcare', 'IT Services', 'Finance', 'Manufacturing', 'Hospitality', 'Other'] %}
+                            {% for type in types %}
+                                <option value="{{ type }}" {% if business and business.business_type == type %}selected{% endif %}>{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="number_of_employees" class="form-label">Number of Employees</label>
+                            <input type="number" min="1" class="form-control" id="number_of_employees" name="number_of_employees" value="{{ business.number_of_employees if business else '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="number_of_devices" class="form-label">Number of Devices</label>
+                            <input type="number" min="1" class="form-control" id="number_of_devices" name="number_of_devices" value="{{ business.number_of_devices if business else '' }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ business.description if business else '' }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i> Save Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card shadow bg-light border-0">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa-solid fa-circle-info text-primary me-2"></i>Why is this important?</h5>
+                <p class="card-text small text-muted">
+                    The size and type of your business heavily influence your threat landscape. 
+                    For example, an IT services company might face higher risks of advanced persistent threats, 
+                    while a retail store must focus heavily on securing Point of Sale (POS) systems and customer data.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

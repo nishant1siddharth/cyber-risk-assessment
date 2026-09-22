@@ -1,0 +1,65 @@
+{% extends "public_base.html" %}
+
+{% block title %}Register - CyberRisk{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center pt-5 mt-5" style="min-height: calc(100vh - 150px);">
+    <div class="w-100" style="max-width: 450px;">
+        <div class="card border-0 glass-card p-4 animate-fade-in-up">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold"><i class="fa-solid fa-user-plus text-primary me-2"></i>Join CyberRisk</h3>
+                <p class="text-muted">Register as an Organization Admin to secure your business. <br><small class="text-primary opacity-75">Note: Employee accounts are managed by Admins inside the dashboard.</small></p>
+            </div>
+            <form method="POST" action="{{ url_for('auth.register') }}">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control form-control-lg bg-dark text-light" id="username" name="username" required autofocus>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control form-control-lg bg-dark text-light" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="position-relative">
+                        <input type="password" class="form-control form-control-lg bg-dark text-light pe-5" id="password" name="password" required>
+                        <span class="position-absolute top-50 end-0 translate-middle-y pe-3" style="cursor: pointer; z-index: 10;" onclick="togglePassword('password', this)">
+                            <i class="fa-regular fa-eye text-muted"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="confirm_password" class="form-label">Confirm Password</label>
+                    <div class="position-relative">
+                        <input type="password" class="form-control form-control-lg bg-dark text-light pe-5" id="confirm_password" name="confirm_password" required>
+                        <span class="position-absolute top-50 end-0 translate-middle-y pe-3" style="cursor: pointer; z-index: 10;" onclick="togglePassword('confirm_password', this)">
+                            <i class="fa-regular fa-eye text-muted"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill btn-glow">Create Account</button>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <p class="mb-0 text-muted">Already have an account? <a href="{{ url_for('auth.login') }}" class="text-primary text-decoration-none">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function togglePassword(inputId, btn) {
+    var input = document.getElementById(inputId);
+    var icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
+{% endblock %}

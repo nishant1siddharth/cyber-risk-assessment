@@ -1,0 +1,44 @@
+Cybersecurity Risk Assessment Framework - Login Credentials
+===========================================================
+
+Below are the default credentials available after running the seed data.
+
+----------------------------------------
+[ ADMIN ACCOUNTS (Full Access) ]
+----------------------------------------
+
+1. Retail Store Organization:
+   Username: demo
+   Password: password123
+
+2. Educational Institute Organization:
+   Username: edu_demo
+   Password: password123
+
+3. IT Services Organization:
+   Username: it_demo
+   Password: password123
+
+----------------------------------------
+[ EMPLOYEE ACCOUNTS (Restricted Access) ]
+----------------------------------------
+
+Employee Account (For Retail Store):
+   Username: employee_demo
+   Password: password123
+
+Employee Account (For IT Services):
+   Username: it_emp101
+   Password: <The password you set>
+
+Employee Account (For Educational Institute):
+   Username: <The username you set>
+   Password: <The password you set>
+
+----------------------------------------
+[ NOTES ON ACCOUNT MANAGEMENT ]
+----------------------------------------
+- You can log in with any Admin account.
+- Once logged in as an Admin, navigate to the "Employee Access" tab in the sidebar.
+- From there, you can create, update, or completely REVOKE (delete) employee access for your organization.
+- Employee accounts can only view the Dashboard and Executive Reports, and cannot modify business configurations or assets.

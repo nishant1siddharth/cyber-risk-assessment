@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Database - CyberRisk{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fa-solid fa-bug me-2"></i> Threat Database</h2>
+        <p class="text-muted">A catalog of common cybersecurity threats facing small and medium-sized businesses.</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for threat in threats %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="fw-bold">{{ threat.name }}</span>
+                <span class="badge bg-secondary">{{ threat.category }}</span>
+            </div>
+            <div class="card-body">
+                <p class="card-text text-muted small">{{ threat.description }}</p>
+                
+                <hr>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="small fw-bold">Typical Likelihood:</span>
+                    <span class="badge bg-dark">{{ threat.likelihood_default }}/5</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="small fw-bold">Typical Impact:</span>
+                    <span class="badge bg-dark">{{ threat.impact_default }}/5</span>
+                </div>
+                
+                <button type="button" class="btn btn-sm btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#mitigationModal{{ threat.id }}">
+                    <i class="fa-solid fa-shield me-1"></i> View Defenses
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mitigation Modal for {{ threat.name }} -->
+    <div class="modal fade" id="mitigationModal{{ threat.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-shield-check me-2"></i>Defenses for {{ threat.name }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-4">Recommended mitigations for <strong>{{ threat.name }}</strong>.</p>
+                    
+                    <div class="list-group">
+                        {% for mitigation in threat.mitigations %}
+                        <div class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between mb-2">
+                                <h6 class="mb-1 fw-bold">{{ mitigation.title }}</h6>
+                                {% if mitigation.priority == 'Critical' %}
+                                    <span class="badge bg-danger">{{ mitigation.priority }}</span>
+                                {% elif mitigation.priority == 'High' %}
+                                    <span class="badge bg-warning text-dark">{{ mitigation.priority }}</span>
+                                {% elif mitigation.priority == 'Medium' %}
+                                    <span class="badge bg-info text-dark">{{ mitigation.priority }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ mitigation.priority }}</span>
+                                {% endif %}
+                            </div>
+                            <p class="mb-1 small text-muted">{{ mitigation.description }}</p>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info">No specific mitigations listed.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Risk Matrix - CyberRisk{% endblock %}
+
+{% block extra_css %}
+<style>
+    .matrix-container {
+        display: grid;
+        grid-template-columns: 50px repeat(5, 1fr);
+        grid-template-rows: 50px repeat(5, 100px) 50px;
+        gap: 2px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .matrix-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        border-radius: 4px;
+        text-align: center;
+        padding: 5px;
+    }
+    .matrix-header {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .y-axis-label {
+        grid-row: 2 / span 5;
+        grid-column: 1;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        text-align: center;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+    .x-axis-label {
+        grid-row: 7;
+        grid-column: 2 / span 5;
+        text-align: center;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+    
+    .cell-low { background-color: #d1e7dd; color: #0f5132; }
+    .cell-medium { background-color: #fff3cd; color: #664d03; }
+    .cell-high { background-color: #f8d7da; color: #842029; }
+    .cell-critical { background-color: #212529; color: #fff; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fa-solid fa-table-cells me-2"></i> Risk Matrix</h2>
+        <p class="text-muted">Visual representation of Risk = Likelihood &times; Impact.</p>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-5">
+    <div class="col-12">
+        <div class="card shadow border-0">
+            <div class="card-body p-5 overflow-auto">
+                
+                <div class="matrix-container bg-white">
+                    <!-- Top Impact Headers -->
+                    <div></div> <!-- Empty top-left -->
+                    <div class="matrix-header">Impact 1<br>(Negligible)</div>
+                    <div class="matrix-header">Impact 2<br>(Minor)</div>
+                    <div class="matrix-header">Impact 3<br>(Moderate)</div>
+                    <div class="matrix-header">Impact 4<br>(Major)</div>
+                    <div class="matrix-header">Impact 5<br>(Severe)</div>
+                    
+                    <!-- Y Axis Label -->
+                    <div class="y-axis-label">LIKELIHOOD</div>
+                    
+                    <!-- Row L5 -->
+                    <div class="matrix-header">L 5<br>(Almost Certain)</div>
+                    <div class="matrix-cell cell-low">5 (Low)</div>
+                    <div class="matrix-cell cell-medium">10 (Medium)</div>
+                    <div class="matrix-cell cell-high">15 (High)</div>
+                    <div class="matrix-cell cell-critical">20 (Critical)</div>
+                    <div class="matrix-cell cell-critical">25 (Critical)</div>
+
+                    <!-- Row L4 -->
+                    <div class="matrix-header">L 4<br>(Likely)</div>
+                    <div class="matrix-cell cell-low">4 (Low)</div>
+                    <div class="matrix-cell cell-medium">8 (Medium)</div>
+                    <div class="matrix-cell cell-high">12 (High)</div>
+                    <div class="matrix-cell cell-critical">16 (Critical)</div>
+                    <div class="matrix-cell cell-critical">20 (Critical)</div>
+
+                    <!-- Row L3 -->
+                    <div class="matrix-header">L 3<br>(Possible)</div>
+                    <div class="matrix-cell cell-low">3 (Low)</div>
+                    <div class="matrix-cell cell-medium">6 (Medium)</div>
+                    <div class="matrix-cell cell-medium">9 (Medium)</div>
+                    <div class="matrix-cell cell-high">12 (High)</div>
+                    <div class="matrix-cell cell-high">15 (High)</div>
+
+                    <!-- Row L2 -->
+                    <div class="matrix-header">L 2<br>(Unlikely)</div>
+                    <div class="matrix-cell cell-low">2 (Low)</div>
+                    <div class="matrix-cell cell-low">4 (Low)</div>
+                    <div class="matrix-cell cell-medium">6 (Medium)</div>
+                    <div class="matrix-cell cell-medium">8 (Medium)</div>
+                    <div class="matrix-cell cell-medium">10 (Medium)</div>
+
+                    <!-- Row L1 -->
+                    <div class="matrix-header">L 1<br>(Rare)</div>
+                    <div class="matrix-cell cell-low">1 (Low)</div>
+                    <div class="matrix-cell cell-low">2 (Low)</div>
+                    <div class="matrix-cell cell-low">3 (Low)</div>
+                    <div class="matrix-cell cell-low">4 (Low)</div>
+                    <div class="matrix-cell cell-low">5 (Low)</div>
+                    
+                    <!-- X Axis Label -->
+                    <div class="x-axis-label pt-3">IMPACT</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

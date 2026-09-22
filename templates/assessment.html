@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}New Risk Assessment - CyberRisk{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fa-solid fa-clipboard-check me-2"></i> New Risk Assessment</h2>
+        <p class="text-muted">Evaluate the risk of a specific threat against one of your business assets.</p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('assessment.new') }}">
+                    
+                    <h5 class="mb-3 text-primary border-bottom pb-2">1. Select Target</h5>
+                    
+                    <div class="mb-3">
+                        <label for="asset_id" class="form-label fw-bold">Target Asset *</label>
+                        <select class="form-select" id="asset_id" name="asset_id" required>
+                            <option value="">Select an asset...</option>
+                            {% for asset in assets %}
+                                <option value="{{ asset.id }}">{{ asset.name }} ({{ asset.category }} - Importance: {{ asset.importance }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="threat_id" class="form-label fw-bold">Threat Scenario *</label>
+                        <select class="form-select" id="threat_id" name="threat_id" required>
+                            <option value="">Select a threat...</option>
+                            {% for threat in threats %}
+                                <option value="{{ threat.id }}">{{ threat.name }} (Typical L:{{ threat.likelihood_default }}, I:{{ threat.impact_default }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <h5 class="mb-3 text-primary border-bottom pb-2">2. Evaluate Risk Factors</h5>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="likelihood" class="form-label fw-bold">Likelihood (1-5) *</label>
+                            <select class="form-select" id="likelihood" name="likelihood" required>
+                                <option value="">Select likelihood...</option>
+                                <option value="1">1 - Rare (Once in 5+ years)</option>
+                                <option value="2">2 - Unlikely (Once in 2-5 years)</option>
+                                <option value="3">3 - Possible (Once a year)</option>
+                                <option value="4">4 - Likely (Multiple times a year)</option>
+                                <option value="5">5 - Almost Certain (Monthly or more)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="impact" class="form-label fw-bold">Impact (1-5) *</label>
+                            <select class="form-select" id="impact" name="impact" required>
+                                <option value="">Select impact...</option>
+                                <option value="1">1 - Negligible</option>
+                                <option value="2">2 - Minor</option>
+                                <option value="3">3 - Moderate</option>
+                                <option value="4">4 - Major</option>
+                                <option value="5">5 - Severe</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3 text-primary border-bottom pb-2">3. Additional Details (Optional)</h5>
+                    <div class="mb-4">
+                        <label for="notes" class="form-label">Assessment Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Context, existing controls, or justification for the scores..."></textarea>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="fa-solid fa-calculator me-2"></i> Calculate Risk</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

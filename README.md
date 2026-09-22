@@ -61,7 +61,8 @@ A comprehensive, web-based Cybersecurity Risk Assessment Framework designed spec
    ```bash
    flask run
    ```
-   The application will be available at `http://127.0.0.1:5000/`.
+   The application will be available at `http://127.0.0.1:4444
+   /`.
 
 ## Usage Flow
 1. Register as a new Admin.

@@ -13,12 +13,12 @@
             <form method="POST" action="{{ url_for('auth.login') }}">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control form-control-lg bg-dark text-light" id="username" name="username" required autofocus>
+                    <input type="text" class="form-control form-control-lg" id="username" name="username" required autofocus>
                 </div>
                 <div class="mb-4">
                     <label for="password" class="form-label">Password</label>
                     <div class="position-relative">
-                        <input type="password" class="form-control form-control-lg bg-dark text-light pe-5" id="password" name="password" required>
+                        <input type="password" class="form-control form-control-lg pe-5" id="password" name="password" required>
                         <span class="position-absolute top-50 end-0 translate-middle-y pe-3" style="cursor: pointer; z-index: 10;" onclick="togglePassword('password', this)">
                             <i class="fa-regular fa-eye text-muted"></i>
                         </span>

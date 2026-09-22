@@ -1,107 +1,530 @@
 {% extends 'public_base.html' %}
 
-{% block title %}CyberRisk - Secure Your Future{% endblock %}
+{% block title %}Cyber Risk Assessment Framework{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+<style>
+    /* Specific Styles for RiskLens UI Landing Page */
+    .hero-section {
+        background-color: var(--ent-bg);
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 100px;
+    }
+
+    
+    .container {
+        position: relative;
+        z-index: 10;
+    }
+    
+    .hero-title {
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        position: relative;
+    }
+    /* Canvas overlay will be drawn below these elements */
+    #bgCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.15;
+        pointer-events: none;
+    }
+
+    .hero-subtitle {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        max-width: 400px;
+        line-height: 1.5;
+    }
+
+    .text-cyan {
+        color: var(--primary-color);
+    }
+
+    /* Orbital Hero Graphic */
+    .graphic-container {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        aspect-ratio: 1;
+        margin: 0 auto;
+    }
+
+    .node {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--ent-surface);
+        border: 2px solid;
+        z-index: 2;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        animation: counterSpin 20s linear infinite;
+    }
+    
+    @keyframes counterSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(-360deg); }
+    }
+
+    .node i {
+        font-size: 1.5rem;
+        margin: 0;
+        color: white;
+    }
+
+    .node-center {
+        width: 120px;
+        height: 120px;
+        top: 50%;
+        left: 50%;
+        margin-top: -60px;
+        margin-left: -60px;
+        background: linear-gradient(135deg, #00e5ff, #007bff);
+        border: none;
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+        animation: pulseCenter 3s infinite alternate;
+        z-index: 5;
+    }
+    
+    @keyframes pulseCenter {
+        from { transform: scale(1); box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); }
+        to { transform: scale(1.05); box-shadow: 0 0 50px rgba(0, 229, 255, 0.8); }
+    }
+
+    .orbit-container {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        animation: spinOrbit 20s linear infinite;
+        z-index: 1;
+    }
+    
+    @keyframes spinOrbit {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .node-1 { top: 5%; left: 50%; margin-left: -40px; border-color: #00e5ff; box-shadow: inset 0 0 15px rgba(0,229,255,0.2); }
+    .node-2 { top: 50%; right: 5%; margin-top: -40px; border-color: #00e676; box-shadow: inset 0 0 15px rgba(0,230,118,0.2); }
+    .node-3 { bottom: 5%; left: 50%; margin-left: -40px; border-color: #ffab00; box-shadow: inset 0 0 15px rgba(255,171,0,0.2); }
+    .node-4 { top: 50%; left: 5%; margin-top: -40px; border-color: #d500f9; box-shadow: inset 0 0 15px rgba(213,0,249,0.2); }
+    
+    .feature-card {
+        background: var(--ent-surface);
+        border: 1px solid var(--ent-border);
+        border-radius: 12px;
+        padding: 2rem;
+        height: 100%;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(0,229,255,0.15);
+        border-color: rgba(0,229,255,0.4);
+    }
+    
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,229,255,0.1);
+        color: var(--ent-primary);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+        background: rgba(0,229,255,0.2);
+        color: #fff;
+        box-shadow: 0 0 15px rgba(0,229,255,0.4);
+        transform: scale(1.1);
+    }
+    
+    /* Scroll Animations */
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+
+    /* Process Flow */
+    .process-section {
+        padding: 5rem 0;
+        position: relative;
+    }
+
+    /* Charts Preview Section */
+    .charts-preview-section {
+        padding: 5rem 0;
+        background: linear-gradient(to bottom, transparent, rgba(0,229,255,0.02), transparent);
+        border-top: 1px solid var(--ent-border);
+        border-bottom: 1px solid var(--ent-border);
+        margin: 4rem 0;
+    }
+    
+    .chart-container {
+        background: rgba(10, 15, 30, 0.6);
+        border: 1px solid var(--ent-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .chart-title {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        border-bottom: 1px solid var(--ent-border);
+        padding-bottom: 0.75rem;
+    }
+
+</style>
+{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section d-flex align-items-center min-vh-100">
-    <div class="container text-center position-relative z-1">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 mb-4 animate-fade-in-up">
-                    <i class="fa-solid fa-bolt text-warning me-2"></i> Next-Gen Enterprise Security Platform
+<section class="hero-section">
+    <canvas id="bgCanvas"></canvas>
+    <div class="container flex-grow-1 d-flex flex-column justify-content-center" style="pointer-events: none;">
+        <div class="row align-items-center mb-5">
+            <!-- Left Column: Typography -->
+            <div class="col-lg-5 mb-5 mb-lg-0" style="pointer-events: auto;">
+                <div class="d-flex align-items-center gap-2 mb-4" style="color: var(--primary-color); font-weight: 600; font-size: 0.85rem; letter-spacing: 1px;">
+                    <div style="width: 30px; height: 2px; background: var(--primary-color);"></div>
+                    CYBER RISK ASSESSMENT FRAMEWORK
                 </div>
-                <h1 class="display-3 fw-bold mb-4 animate-fade-in-up delay-1 text-gradient">
-                    Identify, Assess, and Mitigate<br>Cyber Threats Instantly.
+                
+                <h1 class="hero-title mb-4">
+                    Understand your<br>cyber risks.<br>
+                    <span class="text-cyan">Assess them clearly.</span><br>
+                    Build practical protection.
                 </h1>
-                <p class="lead text-muted mb-5 px-md-5 animate-fade-in-up delay-2">
-                    Comprehensive cybersecurity risk assessment for modern businesses. Protect your digital and physical assets with intelligent threat modeling and actionable mitigation strategies.
+                
+                <p class="hero-subtitle mb-5">
+                    A simple, structured cyber risk assessment for small businesses and enterprises alike.
                 </p>
-                <div class="d-flex justify-content-center gap-3 animate-fade-in-up delay-3">
-                    {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary btn-lg rounded-pill px-5 btn-glow">
-                        Go to Dashboard <i class="fa-solid fa-arrow-right ms-2"></i>
-                    </a>
-                    {% else %}
-                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg rounded-pill px-5 btn-glow">
-                        Start Free Assessment
-                    </a>
-                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg rounded-pill px-5 glass-btn">
-                        Sign In
-                    </a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Background Gradients -->
-    <div class="gradient-blob top-left"></div>
-    <div class="gradient-blob bottom-right"></div>
-</section>
-
-<!-- Features Section -->
-<section class="features-section py-5" id="features">
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-3">Why Choose CyberRisk?</h2>
-            <p class="text-muted">Enterprise-grade security features built for every organization.</p>
-        </div>
-        <div class="row g-4">
-            <!-- Feature 1 -->
-            <div class="col-md-4">
-                <div class="card feature-card h-100 border-0 glass-card p-4">
-                    <div class="feature-icon-box bg-primary bg-opacity-10 text-primary mb-4">
-                        <i class="fa-solid fa-server fa-2x"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Asset Management</h4>
-                    <p class="text-muted mb-0">
-                        Easily catalog and categorize all your digital and physical assets. Assign criticality scores to prioritize your defensive resources effectively.
-                    </p>
-                </div>
-            </div>
-            <!-- Feature 2 -->
-            <div class="col-md-4">
-                <div class="card feature-card h-100 border-0 glass-card p-4">
-                    <div class="feature-icon-box bg-danger bg-opacity-10 text-danger mb-4">
-                        <i class="fa-solid fa-shield-virus fa-2x"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Threat Modeling</h4>
-                    <p class="text-muted mb-0">
-                        Map threats directly to your assets. Our intelligent engine calculates risk vectors based on likelihood and potential impact.
-                    </p>
-                </div>
-            </div>
-            <!-- Feature 3 -->
-            <div class="col-md-4">
-                <div class="card feature-card h-100 border-0 glass-card p-4">
-                    <div class="feature-icon-box bg-success bg-opacity-10 text-success mb-4">
-                        <i class="fa-solid fa-users-gear fa-2x"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Role-Based Access</h4>
-                    <p class="text-muted mb-0">
-                        Securely manage your organization with Admin and Employee roles. Share dashboard access while restricting sensitive configurations.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="cta-section py-5 my-5">
-    <div class="container">
-        <div class="glass-card p-5 text-center rounded-4 border border-primary border-opacity-25 position-relative overflow-hidden">
-            <div class="position-relative z-1">
-                <h2 class="fw-bold mb-4">Ready to secure your business?</h2>
-                <p class="lead text-muted mb-4">Join thousands of businesses already protecting their infrastructure.</p>
-                {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg rounded-pill px-5 btn-glow">
-                    Create Your Account
+                
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary rounded-pill px-4 py-2 fs-5">
+                    Access Dashboard <i class="fa-solid fa-arrow-right ms-2"></i>
+                </a>
+                {% else %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary rounded-pill px-4 py-2 fs-5 shadow-lg">
+                    Get Started <i class="fa-solid fa-arrow-right ms-2"></i>
                 </a>
                 {% endif %}
             </div>
-            <div class="cta-gradient"></div>
+            
+            <!-- Right Column: Orbital App Graphic -->
+            <div class="col-lg-7">
+                <div class="graphic-container">
+                    
+                    <div class="node node-center">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    
+                    <div class="orbit-container">
+                        <div class="node node-1" title="Assets">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        
+                        <div class="node node-2" title="Threats">
+                            <i class="fa-solid fa-bug"></i>
+                        </div>
+                        
+                        <div class="node node-3" title="Assessments">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </div>
+                        
+                        <div class="node node-4" title="Reports">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
+<!-- Animated Charts Preview Section -->
+<section class="charts-preview-section">
+    <div class="container">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6 mb-4 mb-lg-0 animate-on-scroll">
+                <div class="d-flex align-items-center gap-2 mb-3" style="color: var(--primary-color); font-weight: 600; font-size: 0.85rem; letter-spacing: 1px;">
+                    <div style="width: 30px; height: 2px; background: var(--primary-color);"></div>
+                    DATA-DRIVEN INSIGHTS
+                </div>
+                <h2 class="hero-title text-white mb-4" style="font-size: 2.5rem;">Visualize your risk posture instantly.</h2>
+                <p class="text-muted mb-4">Our platform automatically aggregates your assessment data into intuitive, executive-ready charts. Easily identify critical vulnerabilities and track your overall security health.</p>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary rounded-pill px-4 py-2">
+                    Start Your Free Assessment
+                </a>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-md-6 animate-on-scroll" style="transition-delay: 0.2s;">
+                        <div class="chart-container h-100 text-center">
+                            <div class="chart-title"><i class="fa-solid fa-chart-pie me-2 text-primary"></i> Risk Distribution</div>
+                            <div style="position: relative; height: 180px; width: 100%; display: flex; justify-content: center;">
+                                <canvas id="landingRiskChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 animate-on-scroll" style="transition-delay: 0.4s;">
+                        <div class="chart-container h-100">
+                            <div class="chart-title"><i class="fa-solid fa-server me-2" style="color: #00e676;"></i> Asset Exposure</div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between text-muted small mb-1">
+                                    <span>Cloud Servers</span>
+                                    <span>Critical</span>
+                                </div>
+                                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                                    <div class="progress-bar bg-danger landing-progress" role="progressbar" data-width="85%" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between text-muted small mb-1">
+                                    <span>Employee Laptops</span>
+                                    <span>High</span>
+                                </div>
+                                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                                    <div class="progress-bar bg-warning landing-progress" role="progressbar" data-width="60%" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between text-muted small mb-1">
+                                    <span>Web Application</span>
+                                    <span>Medium</span>
+                                </div>
+                                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                                    <div class="progress-bar bg-info landing-progress" role="progressbar" data-width="35%" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="process-section">
+    <div class="container">
+        <div class="mb-5 text-center animate-on-scroll">
+            <h2 class="hero-title mb-3" style="font-size: 2.5rem;">Powerful Risk Management Capabilities</h2>
+            <p class="text-muted mx-auto" style="max-width: 600px;">Everything you need to catalog assets, evaluate threats, and generate actionable risk intelligence.</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-5">
+                <div class="feature-card animate-on-scroll" style="transition-delay: 0.1s;">
+                    <div class="feature-icon"><i class="fa-solid fa-server"></i></div>
+                    <h4 class="fw-bold text-white mb-3">Asset Cataloging</h4>
+                    <p class="text-muted mb-0">Maintain a comprehensive inventory of your business assets including physical hardware, digital data, networks, and third-party vendors.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-5">
+                <div class="feature-card animate-on-scroll" style="transition-delay: 0.2s;">
+                    <div class="feature-icon"><i class="fa-solid fa-bug"></i></div>
+                    <h4 class="fw-bold text-white mb-3">Threat Modeling</h4>
+                    <p class="text-muted mb-0">Map specific threats like malware, phishing, and insider attacks directly to your vulnerable assets to understand real-world exposure.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-5">
+                <div class="feature-card animate-on-scroll" style="transition-delay: 0.3s;">
+                    <div class="feature-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                    <h4 class="fw-bold text-white mb-3">Likelihood & Impact Assessments</h4>
+                    <p class="text-muted mb-0">Conduct structured questionnaires to evaluate the probability of a threat occurring and the potential financial/operational impact.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-5">
+                <div class="feature-card animate-on-scroll" style="transition-delay: 0.4s;">
+                    <div class="feature-icon"><i class="fa-solid fa-table-cells"></i></div>
+                    <h4 class="fw-bold text-white mb-3">Risk Matrix & Reporting</h4>
+                    <p class="text-muted mb-0">Automatically plot your assessed risks on an interactive Likelihood vs. Impact matrix and generate executive PDF reports instantly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // 1. Background Particle Animation
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let width, height;
+    let particles = [];
+    
+    function initCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        particles = [];
+        const numParticles = Math.floor((width * height) / 15000);
+        
+        for (let i = 0; i < numParticles; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1
+            });
+        }
+    }
+    
+    function animateCanvas() {
+        ctx.clearRect(0, 0, width, height);
+        
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            // Bounce off edges
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 229, 255, 0.5)';
+            ctx.fill();
+        });
+        
+        // Connect close particles
+        ctx.lineWidth = 1;
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                let dx = particles[i].x - particles[j].x;
+                let dy = particles[i].y - particles[j].y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 229, 255, ${1 - dist/150})`;
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        requestAnimationFrame(animateCanvas);
+    }
+    
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
+    animateCanvas();
+
+    
+    // 2. Intersection Observer for Scroll Animations & Charts
+    document.addEventListener('DOMContentLoaded', () => {
+        let chartRendered = false;
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate progress bars if they are in this target
+                    const progressBars = entry.target.querySelectorAll('.landing-progress');
+                    progressBars.forEach(bar => {
+                        bar.style.width = bar.getAttribute('data-width');
+                        bar.style.transition = 'width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s';
+                    });
+                    
+                    // Render Chart.js if the chart canvas is in this target
+                    if (entry.target.querySelector('#landingRiskChart') && !chartRendered) {
+                        renderLandingChart();
+                        chartRendered = true;
+                    }
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+            observer.observe(el);
+        });
+        
+        function renderLandingChart() {
+            const ctx = document.getElementById('landingRiskChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Critical', 'High', 'Medium', 'Low'],
+                    datasets: [{
+                        data: [15, 25, 45, 15],
+                        backgroundColor: ['#ff1744', '#ffab00', '#00e5ff', '#00e676'],
+                        borderWidth: 2,
+                        borderColor: '#0a1128',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true,
+                        duration: 2000,
+                        easing: 'easeOutQuart'
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

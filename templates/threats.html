@@ -15,7 +15,7 @@
     <div class="col-md-6 col-lg-4 mb-4">
         <div class="card shadow h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span class="fw-bold">{{ threat.name }}</span>
+                <span class="fw-bold text-primary">{{ threat.name }}</span>
                 <span class="badge bg-secondary">{{ threat.category }}</span>
             </div>
             <div class="card-body">
@@ -42,9 +42,9 @@
     <div class="modal fade" id="mitigationModal{{ threat.id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content shadow border-0">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title"><i class="fa-solid fa-shield-check me-2"></i>Defenses for {{ threat.name }}</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-shield-check me-2 text-primary"></i>Defenses for {{ threat.name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
                     <p class="text-muted mb-4">Recommended mitigations for <strong>{{ threat.name }}</strong>.</p>

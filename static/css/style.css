@@ -308,9 +308,13 @@ td, th {
 }
 
 /* Option tags */
-option {
-    background-color: var(--card-bg);
-    color: var(--text-heading);
+[data-bs-theme="dark"] option {
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+[data-bs-theme="light"] option {
+    background-color: #ffffff;
+    color: #0f172a;
 }
 
 /* Modals */

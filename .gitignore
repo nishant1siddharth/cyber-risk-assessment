@@ -6,3 +6,5 @@ __pycache__/
 instance/
 .pytest_cache/
 .env
+cred.txt
+project_summary_hinglish.txt
